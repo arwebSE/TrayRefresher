@@ -27,19 +27,19 @@ jobs:
       - name: Restore
         run: dotnet restore "${{ env.PROJECT }}"
 
-      - name: Publish (single-file, self-contained)
+      - name: Publish (single-file, self-contained) to artifacts/
+        shell: pwsh
         run: |
-          dotnet publish "${{ env.PROJECT }}" -c $env:BUILD_CONFIG -r $env:RUNTIME `
+          $ErrorActionPreference = "Stop"
+          mkdir artifacts | Out-Null
+          dotnet publish "TrayRefresher.csproj" -c $env:BUILD_CONFIG -r $env:RUNTIME `
             /p:PublishSingleFile=true `
             /p:SelfContained=true `
             /p:IncludeNativeLibrariesForSelfExtract=true `
             /p:EnableCompressionInSingleFile=true `
-            /p:PublishTrimmed=false
-          
-          $pub = Join-Path -Path (Split-Path "${{ env.PROJECT }}") -ChildPath "bin/${{ env.BUILD_CONFIG }}/net8.0-windows/${{ env.RUNTIME }}/publish"
-          New-Item -ItemType Directory -Force -Path "${{ env.ART_DIR }}" | Out-Null
-          Copy-Item "$pub\*.exe" "${{ env.ART_DIR }}" -Force
-          dir "${{ env.ART_DIR }}"
+            /p:PublishTrimmed=false `
+            -o artifacts
+          Get-ChildItem artifacts
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
