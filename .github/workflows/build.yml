@@ -47,8 +47,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           mkdir $env:ART_DIR | Out-Null
-          $scOut = Join-Path $env:ART_DIR "sc"
-          mkdir $scOut -Force | Out-Null
+          $scOut = Join-Path $env:ART_DIR "sc"; mkdir $scOut -Force | Out-Null
 
           dotnet publish "${{ env.PROJECT }}" -c $env:BUILD_CONFIG -r $env:RUNTIME `
             /p:PublishSingleFile=true `
@@ -66,19 +65,18 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          $fxOut = Join-Path $env:ART_DIR "fx"
-          mkdir $fxOut -Force | Out-Null
+          $fxOut = Join-Path $env:ART_DIR "fx"; mkdir $fxOut -Force | Out-Null
 
           dotnet publish "${{ env.PROJECT }}" -c $env:BUILD_CONFIG -r $env:RUNTIME `
             /p:PublishSingleFile=true `
             /p:SelfContained=false `
-            /p:IncludeNativeLibrariesForSelfExtract=true `
-            /p:EnableCompressionInSingleFile=true `
+            /p:UseAppHost=true `
             /p:PublishTrimmed=false `
             -o $fxOut
 
           $src = Join-Path $fxOut "TrayRefresher.exe"
-          $dst = Join-Path $env:ART_DIR "TrayRefresher_${{ steps.meta.outputs.suffix }}_${{ env.RUNTIME }}_frameworkdep.exe"
+          if (!(Test-Path $src)) { Get-ChildItem $fxOut -Recurse; throw "Expected exe not found." }
+          $dst = Join-Path $env:ART_DIR "TrayRefresher_${{ steps.meta.outputs.suffix }}_${{ env:RUNTIME }}_frameworkdep.exe"
           Copy-Item $src $dst -Force
 
       - name: List artifacts
