@@ -64,19 +64,16 @@ jobs:
       - name: Publish (framework-dependent single-file)
         shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
           $fxOut = Join-Path $env:ART_DIR "fx"; mkdir $fxOut -Force | Out-Null
-
           dotnet publish "${{ env.PROJECT }}" -c $env:BUILD_CONFIG -r $env:RUNTIME `
             /p:PublishSingleFile=true `
             /p:SelfContained=false `
             /p:UseAppHost=true `
             /p:PublishTrimmed=false `
             -o $fxOut
-
           $src = Join-Path $fxOut "TrayRefresher.exe"
-          if (!(Test-Path $src)) { Get-ChildItem $fxOut -Recurse; throw "Expected exe not found." }
-          $dst = Join-Path $env:ART_DIR "TrayRefresher_${{ steps.meta.outputs.suffix }}_${{ env:RUNTIME }}_frameworkdep.exe"
+          if (!(Test-Path $src)) { Get-ChildItem $fxOut -Recurse; throw "Exe not found." }
+          $dst = Join-Path $env:ART_DIR "TrayRefresher_${{ steps.meta.outputs.suffix }}_${{ env.RUNTIME }}_frameworkdep.exe"
           Copy-Item $src $dst -Force
 
       - name: List artifacts
