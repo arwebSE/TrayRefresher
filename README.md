@@ -9,7 +9,7 @@ TrayRefresher is a tiny Windows utility that fixes a **long-standing Windows iss
 ## 🚀 What it does
 
 - **Prevents stuck/ghost icons** in the system tray.
-- **Auto-refreshes** on a timer (default: every 5 minutes).
+- **Auto-refreshes** on a timer (default: every 30 seconds).
 - **Instant refresh on system events:**
   - Logon / unlock
   - Resume from sleep
