@@ -94,10 +94,10 @@ dotnet publish -c Release -r win-x64 `
 
 ## ⚙️ Customizing (refresh interval)
 
-The app refreshes every **5 minutes** by default. If you want a different interval, you can edit one constant in the source and rebuild:
+The app refreshes every **30 seconds** by default. If you want a different interval, you can edit one constant in the source and rebuild:
 
 ```csharp
-public const int REFRESH_MS = 5 * 60 * 1000; // 5 minutes (milliseconds)
+public const int REFRESH_MS = 30 * 1000; // 30 seconds (milliseconds)
 ```
 
 Examples:
