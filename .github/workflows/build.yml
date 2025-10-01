@@ -12,7 +12,7 @@ jobs:
     env:
       BUILD_CONFIG: Release
       RUNTIME: win-x64
-      PROJECT: TrayRefresher/TrayRefresher.csproj
+      PROJECT: TrayRefresher.csproj
       ART_DIR: artifacts
 
     steps:
